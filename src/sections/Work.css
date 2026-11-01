@@ -1,0 +1,317 @@
+.work {
+  position: relative;
+  z-index: 1;
+  --frame-h: min(46svh, 500px);
+}
+
+.work__pin {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100svh;
+  padding-top: var(--nav-h);
+  padding-bottom: 3.5rem;
+  /* clip (not hidden) so focusing an off-screen card can't scroll it sideways */
+  overflow: clip;
+}
+
+.work__track {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 4.5rem);
+  width: max-content;
+  padding-inline: var(--pad);
+}
+
+/* ------------------------- Intro panel -------------------------- */
+.work__intro {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: min(84vw, 36rem);
+}
+
+.work__intro .section-label {
+  margin-bottom: 0;
+}
+
+.work__hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
+.work__hint-arrow {
+  display: inline-block;
+  color: var(--accent);
+  animation: work-nudge 1.8s var(--ease-in-out) infinite;
+}
+
+@keyframes work-nudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(0.6rem);
+  }
+}
+
+/* --------------------------- Cards ------------------------------ */
+.work__list {
+  display: flex;
+  gap: clamp(1.5rem, 4vw, 4.5rem);
+}
+
+.work-card {
+  position: relative;
+  flex-shrink: 0;
+  width: min(86vw, calc(var(--frame-h) * 1.6));
+}
+
+.work-card__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.work-card__frame {
+  position: relative;
+  height: var(--frame-h);
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--ink-soft);
+}
+
+.work-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter 0.6s var(--ease-out);
+}
+
+.work-card:hover .work-card__image {
+  filter: brightness(1.12) saturate(1.1);
+}
+
+.work-card__metric {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  padding: 3rem clamp(1rem, 2vw, 1.75rem) clamp(1rem, 2vw, 1.5rem);
+  background: linear-gradient(to top, rgb(13 13 11 / 0.85), transparent);
+  color: var(--paper);
+}
+
+.work-card__metric strong {
+  font-size: clamp(2.25rem, 4.5vw, 4rem);
+  font-weight: 600;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+}
+
+.work-card__metric .mono {
+  color: rgb(239 235 227 / 0.75);
+}
+
+.work-card__info {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas:
+    'heading summary'
+    'kind summary'
+    'subtitle tools';
+  align-content: start;
+  gap: 0.6rem 2rem;
+}
+
+.work-card__heading {
+  grid-area: heading;
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+}
+
+.work-card__index {
+  color: var(--accent);
+}
+
+.work-card__title {
+  font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+/* The title link stretches over the whole card, so the card is one target. */
+.work-card__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.work-card__link:focus-visible {
+  outline: none;
+}
+
+.work-card:has(.work-card__link:focus-visible) .work-card__frame {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.work-card__arrow {
+  position: relative;
+  top: 0;
+  left: 0;
+  font-size: 0.7em;
+  color: var(--accent);
+  transition:
+    top 0.4s var(--ease-out),
+    left 0.4s var(--ease-out);
+}
+
+.work-card:hover .work-card__arrow {
+  top: -0.15em;
+  left: 0.15em;
+}
+
+.work-card__kind {
+  grid-area: kind;
+  color: var(--muted);
+}
+
+.work-card__subtitle {
+  grid-area: subtitle;
+  max-width: 34ch;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.work-card__summary {
+  grid-area: summary;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.work-card__tools {
+  grid-area: tools;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 0.4rem;
+}
+
+.work-card__tools li {
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.64rem;
+  color: var(--muted);
+}
+
+/* ------------------------ Progress footer ----------------------- */
+.work__footer {
+  position: absolute;
+  left: var(--pad);
+  right: var(--pad);
+  bottom: clamp(1rem, 3vh, 1.75rem);
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  color: var(--muted);
+}
+
+.work__count {
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+.work__bar {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.work__bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+/* ------------------------- Responsive --------------------------- */
+@media (max-width: 899px) {
+  .work {
+    --frame-h: min(34svh, 60vw);
+  }
+
+  .work-card__info {
+    grid-template-columns: 1fr;
+    grid-template-areas: 'heading' 'kind' 'summary' 'tools';
+  }
+
+  .work-card__subtitle {
+    display: none;
+  }
+
+  .work-card__summary {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+  }
+}
+
+@media (max-height: 760px) and (min-width: 900px) {
+  .work-card__subtitle {
+    display: none;
+  }
+
+  .work-card__info {
+    grid-template-areas:
+      'heading summary'
+      'kind summary'
+      'tools summary';
+  }
+}
+
+/* Without motion the row is a plain horizontal scroller. */
+@media (prefers-reduced-motion: reduce) {
+  .work__pin {
+    height: auto;
+    min-height: 100svh;
+    padding-block: calc(var(--nav-h) + 2rem) 3rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+  }
+
+  .work-card,
+  .work__intro {
+    scroll-snap-align: start;
+    scroll-margin-inline: var(--pad);
+  }
+
+  .work__footer {
+    display: none;
+  }
+
+  .work__hint-arrow {
+    animation: none;
+  }
+
+  .work__hint {
+    visibility: hidden;
+  }
+}

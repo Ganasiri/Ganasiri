@@ -1,0 +1,128 @@
+.contact {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100svh;
+  padding-top: var(--section-space);
+}
+
+.contact__title {
+  max-width: 11em;
+  font-size: clamp(3.25rem, 10vw, 11rem);
+  font-weight: 600;
+  line-height: 0.92;
+  letter-spacing: -0.055em;
+  text-wrap: balance;
+}
+
+.contact__title em {
+  font-size: 1.06em;
+  letter-spacing: -0.03em;
+}
+
+.contact__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  margin-top: clamp(2.5rem, 8vh, 5rem);
+}
+
+.contact__blurb {
+  max-width: 30ch;
+  font-size: clamp(1.15rem, 1.8vw, 1.6rem);
+  line-height: 1.35;
+}
+
+.contact__cta {
+  width: clamp(9rem, 15vw, 13rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--orange);
+  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: background-color 0.3s ease;
+}
+
+.contact__cta .magnetic__inner {
+  gap: 0.4rem;
+}
+
+.contact__cta:hover {
+  background: #000;
+}
+
+.contact__details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 2rem;
+  margin-top: clamp(3rem, 10vh, 6rem);
+}
+
+.contact__detail {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.contact__detail-label {
+  color: var(--muted);
+}
+
+.contact__email {
+  font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+}
+
+.contact__copy {
+  padding: 0.5rem 0.9rem;
+  margin-top: 0.25rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.contact__copy:hover {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.contact__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+.contact__links a {
+  display: inline-flex;
+  font-size: 0.85rem;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  margin-top: clamp(4rem, 12vh, 8rem);
+  padding-block: 1.5rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.85rem;
+}
+
+.footer__credit {
+  color: var(--muted);
+}

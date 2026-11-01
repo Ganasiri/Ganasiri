@@ -1,0 +1,88 @@
+.toolbox {
+  overflow: clip;
+}
+
+.toolbox__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem 4rem;
+}
+
+.toolbox__rows {
+  display: grid;
+  gap: clamp(0.25rem, 1vw, 0.75rem);
+  margin-block: clamp(3.5rem, 10vh, 7rem);
+}
+
+.toolbox__row {
+  white-space: nowrap;
+}
+
+.toolbox__row-track {
+  display: inline-flex;
+  font-size: clamp(3rem, 9vw, 9.5rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+}
+
+/* Alternate rows are outlined for rhythm. */
+.toolbox__row:nth-child(even) .toolbox__word {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--fg);
+}
+
+.toolbox__word {
+  display: inline-flex;
+  align-items: center;
+}
+
+.toolbox__sep {
+  margin-inline: 0.35em;
+  font-size: 0.4em;
+  color: var(--accent);
+  -webkit-text-stroke: 0;
+}
+
+.toolbox__groups {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3rem clamp(1.5rem, 3vw, 3rem);
+}
+
+.toolbox__group {
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.toolbox__group-title {
+  margin-bottom: 1rem;
+  color: var(--accent);
+}
+
+.toolbox__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.toolbox__list li {
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 1023px) {
+  .toolbox__groups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 599px) {
+  .toolbox__groups {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,148 @@
+.experience__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(3rem, 8vw, 9rem);
+}
+
+.experience__aside {
+  position: sticky;
+  top: calc(var(--nav-h) + 3rem);
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.experience__aside .section-label {
+  margin-bottom: 0;
+}
+
+/* Odometer-style year that rolls to the milestone in view. */
+.experience__reel {
+  height: 1em;
+  margin-top: clamp(1rem, 5vh, 3rem);
+  overflow: hidden;
+  font-size: clamp(4.5rem, 12vw, 11rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  color: var(--accent);
+}
+
+.experience__reel-track {
+  display: flex;
+  flex-direction: column;
+  transform: translateY(calc(var(--active, 0) * -1em));
+  transition: transform 0.9s var(--ease-out);
+}
+
+.experience__reel-year {
+  height: 1em;
+  font-variant-numeric: tabular-nums;
+}
+
+.experience__timeline {
+  position: relative;
+  padding-left: clamp(2.25rem, 4vw, 3.5rem);
+}
+
+.experience__rail {
+  position: absolute;
+  top: 0.55rem;
+  bottom: 0;
+  left: 5px;
+  width: 1px;
+  background: var(--line);
+}
+
+.experience__rail-fill {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transform-origin: 50% 0;
+}
+
+.experience__list {
+  display: grid;
+  gap: clamp(4rem, 16vh, 10rem);
+  padding-bottom: clamp(2rem, 12vh, 8rem);
+}
+
+.milestone {
+  position: relative;
+  display: grid;
+  gap: 0.6rem;
+  opacity: 0.38;
+  transition: opacity 0.6s var(--ease-out);
+}
+
+.milestone.is-reached {
+  opacity: 1;
+}
+
+.milestone__dot {
+  position: absolute;
+  top: 0.3rem;
+  left: calc(-1 * clamp(2.25rem, 4vw, 3.5rem));
+  width: 11px;
+  height: 11px;
+  border: 1px solid var(--fg);
+  border-radius: 50%;
+  background: var(--bg);
+  transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    transform 0.4s var(--ease-out);
+}
+
+.milestone.is-reached .milestone__dot {
+  border-color: var(--accent);
+  background: var(--accent);
+  transform: scale(1.35);
+}
+
+.milestone__period {
+  color: var(--accent);
+}
+
+.milestone__title {
+  font-size: clamp(1.6rem, 3vw, 2.75rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.milestone__org {
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.milestone__text {
+  max-width: 52ch;
+  margin-top: 0.4rem;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.15vw, 1.1rem);
+}
+
+@media (max-width: 899px) {
+  .experience__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .experience__aside {
+    position: static;
+  }
+
+  .experience__reel {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .experience__reel-track,
+  .milestone,
+  .milestone__dot {
+    transition: none;
+  }
+}
