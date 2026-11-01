@@ -1,0 +1,338 @@
+/* ------------------------------------------------------------------
+   Theme colours are registered so they can transition: each section
+   sets data-theme on <html> as it reaches the middle of the screen,
+   and the whole page fades to the new palette.
+   ------------------------------------------------------------------ */
+@property --bg {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #0d0d0b;
+}
+@property --fg {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #efebe3;
+}
+@property --muted {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #8f8b82;
+}
+@property --line {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgb(239 235 227 / 0.14);
+}
+@property --accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ff5b24;
+}
+
+:root {
+  --ink: #0d0d0b;
+  --ink-soft: #1b1a17;
+  --paper: #efebe3;
+  --paper-deep: #dcd5c7;
+  --orange: #ff5b24;
+  --orange-deep: #c2370a;
+
+  --bg: var(--ink);
+  --fg: var(--paper);
+  --muted: #8f8b82;
+  --line: rgb(239 235 227 / 0.14);
+  --accent: var(--orange);
+
+  --font-sans: 'Inter Tight Variable', 'Inter Tight', system-ui, sans-serif;
+  --font-serif: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --pad: clamp(1.25rem, 4vw, 3.5rem);
+  --nav-h: 4.5rem;
+  --section-space: clamp(6rem, 16vh, 12rem);
+  --radius: clamp(1rem, 2vw, 1.75rem);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  color-scheme: dark;
+  scrollbar-gutter: stable;
+  transition:
+    --bg 0.8s var(--ease-out),
+    --fg 0.8s var(--ease-out),
+    --muted 0.8s var(--ease-out),
+    --line 0.8s var(--ease-out),
+    --accent 0.8s var(--ease-out);
+}
+
+:root[data-theme='light'] {
+  --bg: var(--paper);
+  --fg: var(--ink);
+  --muted: #6b675f;
+  --line: rgb(13 13 11 / 0.14);
+  --accent: var(--orange-deep);
+  color-scheme: light;
+}
+
+:root[data-theme='accent'] {
+  --bg: var(--orange);
+  --fg: var(--ink);
+  --muted: rgb(13 13 11 / 0.8);
+  --line: rgb(13 13 11 / 0.22);
+  --accent: var(--ink);
+  color-scheme: light;
+}
+
+/* While the loader is on screen nothing should scroll. */
+html.is-locked {
+  overflow: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  overflow-x: clip;
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+p,
+ol,
+ul,
+dl,
+dd,
+figure {
+  margin: 0;
+}
+
+ol,
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+img,
+svg,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* Sections receive focus after in-page navigation; no ring needed there. */
+section:focus {
+  outline: none;
+}
+
+/* ---------------------------- Layout ---------------------------- */
+.container {
+  width: 100%;
+  max-width: 1680px;
+  margin-inline: auto;
+  padding-inline: var(--pad);
+}
+
+.section {
+  position: relative;
+  z-index: 1;
+  padding-block: var(--section-space);
+}
+
+/* ------------------------- Typography --------------------------- */
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-size: clamp(2.75rem, 7.2vw, 7.5rem);
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.section-title em {
+  font-size: 1.08em;
+  letter-spacing: -0.02em;
+}
+
+.section-blurb {
+  max-width: 34ch;
+  color: var(--muted);
+  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+  line-height: 1.5;
+}
+
+/* Masks created by SplitText for line reveals; the padding keeps
+   descenders and italic overhangs from being clipped. */
+.reveal-line-mask {
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+
+/* --------------------------- Utilities -------------------------- */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 300;
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  background: var(--fg);
+  color: var(--bg);
+  transform: translateY(-200%);
+  transition: transform 0.3s var(--ease-out);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* Section eyebrow: "(01) —— About" */
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.section-label__index {
+  color: var(--accent);
+}
+
+.section-label__rule {
+  width: clamp(2rem, 6vw, 4.5rem);
+  height: 1px;
+  background: currentColor;
+  opacity: 0.4;
+}
+
+/* Text that rolls up to a copy of itself on hover. */
+.roll {
+  display: inline-flex;
+  height: 1.25em;
+  overflow: hidden;
+  line-height: 1.25;
+  vertical-align: top;
+}
+
+.roll__track {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.55s var(--ease-out);
+}
+
+.roll__text {
+  display: block;
+  height: 1.25em;
+  white-space: nowrap;
+}
+
+a:hover .roll__track,
+a:focus-visible .roll__track,
+button:hover .roll__track,
+button:focus-visible .roll__track {
+  transform: translateY(-50%);
+}
+
+/* Links that lean towards the pointer (see MagneticLink). */
+.magnetic,
+.magnetic__inner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Global scroll progress bar */
+.scroll-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 60;
+  height: 2px;
+  pointer-events: none;
+}
+
+.scroll-progress__bar {
+  height: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    transition: none;
+  }
+
+  .roll__track,
+  .skip-link {
+    transition: none;
+  }
+}

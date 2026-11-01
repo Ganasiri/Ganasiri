@@ -1,0 +1,93 @@
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+
+.cursor__dot,
+.cursor__ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cursor__dot.is-visible,
+.cursor__ring.is-visible {
+  opacity: 1;
+}
+
+.cursor__dot {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: #fff;
+  mix-blend-mode: difference;
+}
+
+.cursor__ring {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+}
+
+.cursor__ring-shape {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--fg);
+  border-radius: 50%;
+  opacity: 0.55;
+  transition:
+    transform 0.45s var(--ease-out),
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    opacity 0.3s ease;
+}
+
+.cursor__ring.is-hover .cursor__ring-shape {
+  transform: scale(1.6);
+  border-color: var(--accent);
+  opacity: 1;
+}
+
+.cursor__ring.has-label .cursor__ring-shape {
+  transform: scale(2.3);
+  border-color: transparent;
+  background: var(--accent);
+  opacity: 1;
+}
+
+.cursor__ring.is-pressed .cursor__ring-shape {
+  transform: scale(0.8);
+}
+
+.cursor__ring.has-label.is-pressed .cursor__ring-shape {
+  transform: scale(2);
+}
+
+.cursor__label {
+  grid-area: 1 / 1;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--bg);
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity 0.25s ease,
+    transform 0.35s var(--ease-out);
+}
+
+.cursor__ring.has-label .cursor__label {
+  opacity: 1;
+  transform: scale(1);
+}

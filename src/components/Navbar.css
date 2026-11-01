@@ -1,0 +1,120 @@
+.nav {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  height: var(--nav-h);
+  padding-inline: var(--pad);
+  color: var(--fg);
+  pointer-events: none;
+}
+
+/* Soft fade so content scrolling underneath never fights the links. */
+.nav::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 -1.5rem;
+  z-index: -1;
+  background: linear-gradient(to bottom, var(--bg) 30%, transparent);
+  opacity: 0.92;
+}
+
+.nav a {
+  pointer-events: auto;
+}
+
+.nav__brand {
+  display: inline-flex;
+  align-items: flex-start;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.nav__brand sup {
+  margin-left: 0.15em;
+  font-size: 0.6em;
+  line-height: 1.4;
+}
+
+.nav__brand-short {
+  display: none;
+}
+
+.nav__meta {
+  margin-right: auto;
+  margin-left: clamp(2rem, 10vw, 12rem);
+  color: var(--muted);
+}
+
+.nav__links {
+  display: flex;
+  gap: clamp(0.75rem, 2.2vw, 2rem);
+}
+
+.nav__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding-block: 0.5rem;
+}
+
+/* Dot that marks the section currently on screen. */
+.nav__link::before {
+  content: '';
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: scale(0);
+  transition: transform 0.4s var(--ease-out);
+}
+
+.nav__link.is-active::before {
+  transform: scale(1);
+}
+
+@media (max-width: 1023px) {
+  .nav__meta {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .nav__link::before {
+    display: none;
+  }
+
+  .nav__link.is-active {
+    color: var(--accent);
+  }
+
+  .nav__links {
+    gap: 0.8rem;
+  }
+
+  .nav .mono {
+    font-size: 0.68rem;
+    letter-spacing: 0.03em;
+  }
+}
+
+@media (max-width: 380px) {
+  .nav__brand-full {
+    display: none;
+  }
+
+  .nav__brand-short {
+    display: inline;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav__link::before {
+    transition: none;
+  }
+}
