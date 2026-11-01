@@ -28,54 +28,12 @@
   padding-bottom: clamp(1rem, 3vh, 2rem);
 }
 
+/* The copy sits just above the name, where the landscape meets the sky. */
 .hero__content {
   display: flex;
   flex: 1;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 3rem;
-}
-
-.hero__meta {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  color: var(--muted);
-}
-
-.hero__status {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  color: var(--fg);
-}
-
-.hero__dot {
-  position: relative;
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background: var(--accent);
-}
-
-.hero__dot::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: inherit;
-  animation: hero-pulse 2.2s var(--ease-out) infinite;
-}
-
-@keyframes hero-pulse {
-  from {
-    transform: scale(1);
-    opacity: 0.7;
-  }
-  to {
-    transform: scale(3.2);
-    opacity: 0;
-  }
+  justify-content: flex-end;
 }
 
 .hero__copy {
@@ -157,8 +115,6 @@
 
 .hero__footer-inner {
   display: flex;
-  justify-content: space-between;
-  gap: 1rem;
   color: var(--muted);
 }
 
@@ -196,22 +152,25 @@
 }
 
 @media (max-width: 767px) {
+  /* Copy stacks at the top; the landscape fills the space between it
+     and the name. */
+  .hero__content {
+    justify-content: flex-start;
+    padding-top: clamp(1rem, 4vh, 2.5rem);
+  }
+
   .hero__copy {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1.25rem;
+    padding-bottom: 0;
   }
 
   .hero__intro {
     justify-self: start;
   }
-
-  .hero__meta > :last-child {
-    display: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__dot::after,
   .hero__scroll-line {
     animation: none;
   }

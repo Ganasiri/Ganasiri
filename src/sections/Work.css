@@ -97,6 +97,52 @@
   filter: brightness(1.12) saturate(1.1);
 }
 
+/* Publication badge for research papers. Published is solid; accepted is
+   outlined with a hollow dot, since it's on its way but not out yet. */
+.work-card__badge {
+  position: absolute;
+  top: clamp(0.9rem, 1.6vw, 1.25rem);
+  left: clamp(0.9rem, 1.6vw, 1.25rem);
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.25);
+}
+
+.work-card__badge-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+}
+
+.work-card__badge.is-published {
+  background: var(--orange);
+  color: var(--ink);
+}
+
+.work-card__badge.is-published .work-card__badge-dot {
+  background: var(--ink);
+}
+
+.work-card__badge.is-accepted {
+  border: 1px solid var(--orange);
+  background: rgb(13 13 11 / 0.8);
+  color: var(--paper);
+  backdrop-filter: blur(6px);
+}
+
+.work-card__badge.is-accepted .work-card__badge-dot {
+  border: 1.5px solid var(--orange);
+}
+
 .work-card__metric {
   position: absolute;
   left: 0;

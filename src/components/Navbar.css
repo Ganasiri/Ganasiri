@@ -44,12 +44,6 @@
   display: none;
 }
 
-.nav__meta {
-  margin-right: auto;
-  margin-left: clamp(2rem, 10vw, 12rem);
-  color: var(--muted);
-}
-
 .nav__links {
   display: flex;
   gap: clamp(0.75rem, 2.2vw, 2rem);
@@ -76,12 +70,6 @@
 
 .nav__link.is-active::before {
   transform: scale(1);
-}
-
-@media (max-width: 1023px) {
-  .nav__meta {
-    display: none;
-  }
 }
 
 @media (max-width: 600px) {

@@ -8,8 +8,6 @@ import './Hero.css'
 
 const HeroScene = lazy(() => import('../components/HeroScene'))
 
-const YEAR = new Date().getFullYear()
-
 type Props = {
   /** Starts the intro once the loader begins to lift. */
   play: boolean
@@ -130,21 +128,13 @@ export function Hero({ play, onSceneReady }: Props) {
         <HeroScene
           onReady={onSceneReady}
           morphTrigger="#home"
-          fadeTrigger="#about"
+          fadeTrigger=".about__stats"
           reducedMotion={reducedMotion}
         />
       </Suspense>
 
       <div className="hero__inner container">
         <div className="hero__content">
-          <div className="hero__meta">
-            <p className="hero__status mono hero__reveal">
-              <span className="hero__dot" aria-hidden="true" />
-              {profile.status}
-            </p>
-            <p className="mono hero__reveal">{profile.location}</p>
-          </div>
-
           <div className="hero__copy">
             <p className="hero__role hero__reveal">
               <span className="hero__role-title">{profile.role}</span>
@@ -176,7 +166,6 @@ export function Hero({ play, onSceneReady }: Props) {
               <span className="hero__scroll-line" aria-hidden="true" />
               Scroll to explore
             </span>
-            <span>Portfolio © {YEAR}</span>
           </div>
         </div>
       </div>

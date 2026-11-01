@@ -4,11 +4,11 @@ import {
   BufferAttribute,
   BufferGeometry,
   Color,
-  Group,
   PerspectiveCamera,
   Points,
   Scene,
   ShaderMaterial,
+  Vector3,
   WebGLRenderer,
 } from 'three'
 import { gsap, ScrollTrigger } from '../lib/gsap'
@@ -16,121 +16,112 @@ import { gsap, ScrollTrigger } from '../lib/gsap'
 type Props = {
   /** Called after the first frame renders, or straight away without WebGL. */
   onReady: () => void
-  /** Scrolling through this element turns the sphere into a surface plot. */
+  /** Scrolling through this element lifts the camera to a top-down view. */
   morphTrigger: string
-  /** The scene fades out as this element scrolls away. */
+  /** The scene fades out as this element scrolls up into view. */
   fadeTrigger: string
   reducedMotion: boolean
 }
 
-const SPHERE_RADIUS = 1.55
-const PLOT_WIDTH = 9
-const PLOT_DEPTH = 5
+/** Field size in world units, wide enough that its sides stay off screen. */
+const WIDTH = 30
+const NEAR_Z = 3
+const FAR_Z = -19
+const f = (n: number) => n.toFixed(2)
+
+/** Camera at the start (a low view over the field) and after scrolling. */
+const VIEWS = {
+  wide: { position: new Vector3(0, 2.1, 7.2), target: new Vector3(0, 1.45, -4) },
+  // Phones look down a little more, so the horizon sits just under the
+  // copy that stacks at the top of the screen.
+  narrow: { position: new Vector3(0, 2.4, 8.2), target: new Vector3(0, 0.9, -4) },
+  top: { position: new Vector3(0, 10.5, 3.2), target: new Vector3(0, 0, -2.6) },
+}
 
 const vertexShader = /* glsl */ `
   uniform float uTime;
-  uniform float uMorph;
+  uniform float uFlatten;
   uniform float uSize;
   uniform float uPixelRatio;
-  attribute vec3 aTarget;
   attribute float aSeed;
-  varying float vSeed;
-  varying float vMorph;
   varying float vHeat;
+  varying float vAlpha;
+  varying float vScan;
 
-  // Height of the surface plot the particles settle into.
+  // A slowly drifting data surface made of a few interfering waves.
   float surface(vec2 p, float t) {
-    return 0.42 * sin(p.x * 0.85 + t * 0.5) * cos(p.y * 1.2 - t * 0.35)
-         + 0.16 * sin((p.x + p.y) * 1.7 - t * 0.6);
+    return 0.62 * sin(p.x * 0.32 + t * 0.30) * cos(p.y * 0.38 - t * 0.22)
+         + 0.28 * sin(p.x * 0.71 + p.y * 0.53 - t * 0.45)
+         + 0.10 * sin(p.x * 1.60 - t * 0.70) * sin(p.y * 1.30 + t * 0.50);
   }
 
   void main() {
-    float t = uTime;
-
-    // Slowly spinning sphere that breathes with interfering waves.
-    float a = t * 0.12;
     vec3 p = position;
-    p.xz = mat2(cos(a), sin(a), -sin(a), cos(a)) * p.xz;
-    float wave = sin(p.x * 3.1 + t * 0.9) * sin(p.y * 2.7 + t * 0.7) * sin(p.z * 3.3 + t * 0.8);
-    vec3 sphere = p * (1.0 + wave * 0.14);
+    float h = surface(p.xz, uTime);
+    p.y = h * mix(1.0, 0.4, uFlatten);
+    vHeat = smoothstep(-0.3, 0.75, h);
 
-    float h = surface(aTarget.xz, t);
-    vec3 plot = vec3(aTarget.x, h, aTarget.z);
+    // A bright band rolls across the field from the horizon to the viewer.
+    float span = ${f(NEAR_Z - FAR_Z + 8)};
+    float bandZ = ${f(FAR_Z - 4)} + mod(uTime * 2.6, span);
+    vScan = exp(-pow((p.z - bandZ) * 0.85, 2.0));
 
-    // Each particle leaves at a slightly different moment and arcs on the way.
-    float delay = aSeed * 0.4;
-    float m = smoothstep(delay, delay + 0.6, uMorph);
-    vec3 pos = mix(sphere, plot, m);
-    pos.y += sin(m * 3.14159) * (0.5 + aSeed * 0.9);
-
-    vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+    vec4 mvPosition = modelViewMatrix * vec4(p, 1.0);
     gl_Position = projectionMatrix * mvPosition;
-    gl_PointSize = uSize * uPixelRatio * (0.6 + aSeed * 0.8) / -mvPosition.z;
+    float depth = -mvPosition.z;
+    float size = uSize * uPixelRatio * (0.75 + aSeed * 0.5) * (1.0 + vScan * 0.7) / depth;
+    gl_PointSize = min(size, 7.0 * uPixelRatio);
 
-    vSeed = aSeed;
-    vMorph = m;
-    vHeat = smoothstep(-0.5, 0.5, h);
+    // Fade into the distance and towards the side edges.
+    float far = 1.0 - smoothstep(10.0, 21.0, depth);
+    float side = 1.0 - smoothstep(${f(WIDTH / 2 - 6)}, ${f(WIDTH / 2)}, abs(position.x));
+    vAlpha = far * side;
   }
 `
 
 const fragmentShader = /* glsl */ `
   uniform vec3 uAccent;
   uniform vec3 uLight;
-  varying float vSeed;
-  varying float vMorph;
   varying float vHeat;
+  varying float vAlpha;
+  varying float vScan;
 
   void main() {
     float d = length(gl_PointCoord - 0.5);
     if (d > 0.5) discard;
-    float alpha = smoothstep(0.5, 0.05, d) * (0.55 + vSeed * 0.45);
-
-    vec3 sphereColor = mix(uAccent, uLight, step(0.72, vSeed));
+    float soft = smoothstep(0.5, 0.1, d);
     // Low ground is dim, peaks glow in the accent colour, like a heatmap.
-    vec3 plotColor = mix(uLight * 0.45, uAccent, vHeat);
-    gl_FragColor = vec4(mix(sphereColor, plotColor, vMorph), alpha);
+    vec3 color = mix(uLight * 0.5, uAccent, vHeat);
+    color = mix(color, uLight, vScan * 0.45);
+    float alpha = soft * vAlpha * (0.3 + vHeat * 0.7 + vScan * 0.35);
+    gl_FragColor = vec4(color, alpha);
     #include <colorspace_fragment>
   }
 `
 
-function createGeometry(count: number) {
+function createField(cols: number, rows: number) {
+  const count = cols * rows
   const positions = new Float32Array(count * 3)
-  const targets = new Float32Array(count * 3)
   const seeds = new Float32Array(count)
-  const golden = Math.PI * (3 - Math.sqrt(5))
-  const cols = Math.round(Math.sqrt(count * (PLOT_WIDTH / PLOT_DEPTH)))
-  const rows = Math.ceil(count / cols)
-  const jitter = () => (Math.random() - 0.5) * 0.35
-
-  for (let i = 0; i < count; i++) {
-    // Fibonacci sphere: even coverage without clumps at the poles.
-    const y = 1 - (i / (count - 1)) * 2
-    const ring = Math.sqrt(1 - y * y)
-    const theta = golden * i
-    positions[i * 3] = Math.cos(theta) * ring * SPHERE_RADIUS
-    positions[i * 3 + 1] = y * SPHERE_RADIUS
-    positions[i * 3 + 2] = Math.sin(theta) * ring * SPHERE_RADIUS
-
-    // Slightly jittered grid, so the plot reads as data rather than a mesh.
-    const col = i % cols
-    const row = Math.floor(i / cols)
-    targets[i * 3] = ((col + jitter()) / (cols - 1) - 0.5) * PLOT_WIDTH
-    targets[i * 3 + 2] = ((row + jitter()) / Math.max(rows - 1, 1) - 0.5) * PLOT_DEPTH
-
-    seeds[i] = Math.random()
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const i = row * cols + col
+      positions[i * 3] = (col / (cols - 1) - 0.5) * WIDTH
+      positions[i * 3 + 2] = FAR_Z + (row / (rows - 1)) * (NEAR_Z - FAR_Z)
+      seeds[i] = Math.random()
+    }
   }
-
   const geometry = new BufferGeometry()
   geometry.setAttribute('position', new BufferAttribute(positions, 3))
-  geometry.setAttribute('aTarget', new BufferAttribute(targets, 3))
   geometry.setAttribute('aSeed', new BufferAttribute(seeds, 1))
   return geometry
 }
 
 /**
- * A sphere of data points that settles into a 3D surface plot as the hero
- * scrolls away, then fades out with the About section. Pauses rendering
- * once it's out of view.
+ * A landscape of data points, a live 3D surface chart, that the hero name
+ * stands on. Scrolling lifts the camera until the field reads as a flat
+ * heatmap, then it fades out with the About section. Rendering pauses once
+ * it's out of view.
  */
 export default function HeroScene({ onReady, morphTrigger, fadeTrigger, reducedMotion }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -154,15 +145,13 @@ export default function HeroScene({ onReady, morphTrigger, fadeTrigger, reducedM
     container.appendChild(renderer.domElement)
 
     const scene = new Scene()
-    const camera = new PerspectiveCamera(35, 1, 0.1, 100)
-    const group = new Group()
-    scene.add(group)
+    const camera = new PerspectiveCamera(40, 1, 0.1, 60)
 
-    const geometry = createGeometry(small ? 6000 : 12000)
+    const geometry = small ? createField(150, 80) : createField(300, 120)
     const uniforms = {
       uTime: { value: 0 },
-      uMorph: { value: 0 },
-      uSize: { value: small ? 24 : 27 },
+      uFlatten: { value: 0 },
+      uSize: { value: small ? 34 : 30 },
       uPixelRatio: { value: pixelRatio },
       uAccent: { value: new Color('#ff5b24') },
       uLight: { value: new Color('#efebe3') },
@@ -175,18 +164,23 @@ export default function HeroScene({ onReady, morphTrigger, fadeTrigger, reducedM
       depthWrite: false,
       blending: AdditiveBlending,
     })
-    group.add(new Points(geometry, material))
+    scene.add(new Points(geometry, material))
 
     const pointer = { x: 0, y: 0 }
-    const tilt = { x: 0, y: 0 }
+    const sway = { x: 0, y: 0 }
+    const position = new Vector3()
+    const target = new Vector3()
 
     const render = () => {
-      const morph = uniforms.uMorph.value
-      // Sit between the role and the intro on wide screens, centre as it morphs.
-      group.position.x = camera.aspect > 1.1 ? (1 - morph) * 0.3 : 0
-      group.position.y = (1 - morph) * 0.15 - morph * 0.35
-      group.rotation.x = 0.12 + morph * 0.5 + tilt.x
-      group.rotation.y = tilt.y
+      const t = uniforms.uFlatten.value
+      const start = camera.aspect < 1 ? VIEWS.narrow : VIEWS.wide
+      position.lerpVectors(start.position, VIEWS.top.position, t)
+      target.lerpVectors(start.target, VIEWS.top.target, t)
+      // A little parallax with the mouse, strongest in the low view.
+      position.x += sway.x * (1 - t * 0.6)
+      position.y += sway.y * (1 - t)
+      camera.position.copy(position)
+      camera.lookAt(target)
       renderer.render(scene, camera)
     }
 
@@ -195,10 +189,6 @@ export default function HeroScene({ onReady, morphTrigger, fadeTrigger, reducedM
       const height = container.clientHeight || window.innerHeight
       renderer.setSize(width, height, false)
       camera.aspect = width / height
-      // Pull back on narrow screens so the sphere stays inside the width.
-      const halfFov = (camera.fov * Math.PI) / 360
-      const fit = (SPHERE_RADIUS * 2.9) / (2 * Math.tan(halfFov) * camera.aspect)
-      camera.position.z = Math.max(9, fit)
       camera.updateProjectionMatrix()
       render()
     }
@@ -207,20 +197,21 @@ export default function HeroScene({ onReady, morphTrigger, fadeTrigger, reducedM
     const ctx = gsap.context(() => {
       const heroRange = { trigger: morphTrigger, start: 'top top', end: 'bottom top', scrub: true }
       if (!reducedMotion) {
-        gsap.to(uniforms.uMorph, { value: 1, ease: 'none', scrollTrigger: heroRange })
+        gsap.to(uniforms.uFlatten, { value: 1, ease: 'power1.inOut', scrollTrigger: heroRange })
       }
-      // Without the morph there's nothing to show behind About, so fade out fully.
-      gsap.to(container, { opacity: reducedMotion ? 0 : 0.4, ease: 'none', scrollTrigger: heroRange })
+      // Without the camera move there's nothing to show behind About.
+      gsap.to(container, { opacity: reducedMotion ? 0 : 0.45, ease: 'none', scrollTrigger: heroRange })
+      // Gone by the time the fade element is halfway up, so text there is clean.
       gsap.to(renderer.domElement, {
         opacity: 0,
         ease: 'none',
-        scrollTrigger: { trigger: fadeTrigger, start: 'center 60%', end: 'bottom 40%', scrub: true },
+        scrollTrigger: { trigger: fadeTrigger, start: 'top bottom', end: 'top 50%', scrub: true },
       })
       visibility = ScrollTrigger.create({
         trigger: morphTrigger,
         start: 'top bottom',
         endTrigger: fadeTrigger,
-        end: 'bottom 40%',
+        end: 'top 50%',
         onToggle: (self) => {
           if (self.isActive && reducedMotion) render()
         },
@@ -235,8 +226,8 @@ export default function HeroScene({ onReady, morphTrigger, fadeTrigger, reducedM
     const tick = (_time: number, deltaTime: number) => {
       if (!visibility?.isActive) return
       uniforms.uTime.value += Math.min(deltaTime, 50) / 1000
-      tilt.x += (pointer.y * 0.12 - tilt.x) * 0.05
-      tilt.y += (pointer.x * 0.2 - tilt.y) * 0.05
+      sway.x += (pointer.x * 0.9 - sway.x) * 0.04
+      sway.y += (-pointer.y * 0.25 - sway.y) * 0.04
       render()
     }
 

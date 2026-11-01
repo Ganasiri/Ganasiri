@@ -206,13 +206,6 @@ section:focus {
   letter-spacing: -0.02em;
 }
 
-.section-blurb {
-  max-width: 34ch;
-  color: var(--muted);
-  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
-  line-height: 1.5;
-}
-
 /* Masks created by SplitText for line reveals; the padding keeps
    descenders and italic overhangs from being clipped. */
 .reveal-line-mask {
