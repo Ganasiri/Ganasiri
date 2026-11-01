@@ -50,7 +50,6 @@ export function Services() {
               <Emphasis text={servicesSection.title} />
             </h2>
           </div>
-          <p className="section-blurb">{servicesSection.blurb}</p>
         </header>
 
         <ol className="services__list">

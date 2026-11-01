@@ -57,7 +57,6 @@ export function Toolbox() {
             <Emphasis text={stackSection.title} />
           </h2>
         </div>
-        <p className="section-blurb">{stackSection.blurb}</p>
       </div>
 
       <div className="toolbox__rows" aria-hidden="true">

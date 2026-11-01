@@ -43,7 +43,7 @@ All text lives in [`src/content.ts`](src/content.ts), so you never need to touch
 
 | Section | Effect |
 | --- | --- |
-| Hero | Letters rise in after the loader. Scrolling lifts them apart, and the 3D sphere of points (Three.js) settles into a surface plot |
+| Hero | Letters rise in after the loader and stand on a 3D landscape of data points (Three.js). Scrolling lifts the letters apart and raises the camera until the landscape reads as a flat heatmap |
 | About | Words light up one by one as you scroll; the counters count up |
 | What I do | Cards stick and stack on top of each other |
 | Work | The section pins and vertical scroll moves the cards sideways, with image parallax and a progress counter |

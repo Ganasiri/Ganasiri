@@ -52,10 +52,6 @@ export function Navbar() {
         <sup aria-hidden="true">©</sup>
       </a>
 
-      <p className="nav__meta mono">
-        {profile.role} — {profile.location}
-      </p>
-
       <nav aria-label="Sections">
         <ul className="nav__links">
           {navigation.map(({ id, label }) => (

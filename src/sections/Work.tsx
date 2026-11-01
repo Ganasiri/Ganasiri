@@ -1,7 +1,7 @@
 import { useLenis } from 'lenis/react'
 import { useRef, type FocusEvent } from 'react'
 import { Emphasis, SectionLabel } from '../components/text'
-import { projects, workSection, type Project } from '../content'
+import { paperStatus, projects, workSection, type Project } from '../content'
 import { useLineReveal } from '../hooks/useLineReveal'
 import { gsap, MOTION_OK, ScrollTrigger, useGSAP } from '../lib/gsap'
 import './Work.css'
@@ -157,7 +157,6 @@ export function Work() {
             <h2 id="work-title" className="section-title work__title">
               <Emphasis text={workSection.title} />
             </h2>
-            <p className="section-blurb">{workSection.blurb}</p>
             <p className="work__hint mono" aria-hidden="true">
               Keep scrolling <span className="work__hint-arrow">→</span>
             </p>
@@ -179,7 +178,6 @@ export function Work() {
           <span className="work__bar">
             <span ref={barRef} className="work__bar-fill" />
           </span>
-          <span>Scroll</span>
         </div>
       </div>
     </section>
@@ -199,6 +197,12 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           loading="lazy"
           decoding="async"
         />
+        {project.status && (
+          <p className={`work-card__badge is-${project.status}`}>
+            <span className="work-card__badge-dot" aria-hidden="true" />
+            {paperStatus[project.status]}
+          </p>
+        )}
         <p className="work-card__metric">
           <strong>{project.metric.value}</strong>
           <span className="mono">{project.metric.label}</span>

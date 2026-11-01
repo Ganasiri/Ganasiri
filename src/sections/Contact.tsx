@@ -117,7 +117,6 @@ function Footer() {
         <p>
           © {YEAR} {profile.name}
         </p>
-        <p className="footer__credit">Built with React, GSAP, Lenis &amp; Three.js</p>
         <button type="button" className="footer__top mono" onClick={backToTop}>
           <RollingText>Back to top ↑</RollingText>
         </button>

@@ -65,7 +65,6 @@ export function Experience() {
           <h2 id="experience-title" className="section-title experience__title">
             <Emphasis text={experienceSection.title} />
           </h2>
-          <p className="section-blurb">{experienceSection.blurb}</p>
           <div className="experience__reel" aria-hidden="true">
             <div ref={reelRef} className="experience__reel-track">
               {experience.map((item) => (

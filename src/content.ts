@@ -7,15 +7,30 @@
 
 export type Link = { label: string; href: string }
 
-export type Stat = { value: number; suffix?: string; label: string }
+export type Stat = {
+  /** The number that counts up; prefix and suffix stay fixed. */
+  value: number
+  prefix?: string
+  suffix?: string
+  /** Keep to about three words so it reads at a glance. */
+  label: string
+  detail?: string
+}
+
+export type Fact = { label: string; value: string }
 
 export type Service = { title: string; description: string; tags: string[] }
+
+/** Publication state of a research paper, shown as a badge on its card. */
+export type PaperStatus = 'published' | 'accepted'
 
 export type Project = {
   /** Short name shown large on the card. */
   title: string
   /** Full title, e.g. the paper's title. */
   subtitle: string
+  /** Set for research papers only. */
+  status?: PaperStatus
   kind: string
   /** Venue, year or status, e.g. "AIDE 2023" or "Paper in preparation". */
   meta: string
@@ -48,7 +63,6 @@ export const profile = {
   /** Cycles after the role in the hero. */
   focus: ['Data Analytics', 'Artificial Intelligence', 'Data Science'],
   intro: 'I turn product data into decisions, and build AI that people can *trust*.',
-  status: 'Product Analyst at Quest Alliance',
   location: 'Bengaluru, India',
   email: 'mmganasiri30@gmail.com',
   /** Profiles listed under "Elsewhere" in Contact; the block hides when empty. */
@@ -66,26 +80,25 @@ export const navigation = [
 ]
 
 export const about = {
-  statement:
-    'I combine data analysis, machine learning and Responsible AI evaluation to turn product and operational data into *decisions* leadership can act on.',
-  paragraphs: [
-    "I'm a Product Analyst at Quest Alliance in Bengaluru. My work runs from product analytics and A/B testing to sales forecasting, decision dashboards and AI products built from system design through to user testing.",
-    'I studied Artificial Intelligence and Data Science at Global Academy of Technology. My research covers predictive modelling and explainable AI, with three papers so far, two of them as first author.',
-    'Away from data, I led my college fashion team, helped organise the CIISCA IEEE conference and INTERACT 2025, won Western Group Dance prizes three years running and gave more than 400 hours to community volunteering.',
-  ],
+  /** One short line, set very large. */
+  statement: 'I measure what matters, then *move* it.',
+  summary: 'At Quest Alliance, I work across product analytics, machine learning and Responsible AI.',
   stats: [
-    { value: 95, suffix: '%', label: 'Engagement on a learning product, up from 74%' },
-    { value: 37, suffix: '%', label: 'Less time to first action after onboarding changes' },
-    { value: 40, suffix: '%', label: 'Higher humanness and RAI scores for a RAG assistant' },
-    { value: 3, label: 'Research papers, two as first author' },
+    { value: 95, suffix: '%', label: 'Engagement', detail: 'up from 74%' },
+    { value: 37, prefix: '−', suffix: '%', label: 'Time to first action', detail: 'after onboarding fixes' },
+    { value: 40, prefix: '+', suffix: '%', label: 'RAI score gain', detail: 'for a RAG assistant' },
+    { value: 3, suffix: '×', label: 'Faster AI delivery', detail: 'three months to one' },
   ] satisfies Stat[],
+  facts: [
+    { label: 'Studied', value: 'B.E. AI & Data Science · CGPA 8.29' },
+    { label: 'Research', value: '2 papers published · 1 accepted' },
+    { label: 'Off the clock', value: 'Fashion team lead · 400+ volunteer hours' },
+  ] satisfies Fact[],
 }
 
 export const servicesSection = {
   label: 'What I do',
-  title: 'Where data meets *decisions*',
-  blurb:
-    'Four kinds of work I do most, from the first SQL query to an AI product people use every day.',
+  title: 'Built on *evidence*',
 }
 
 export const services: Service[] = [
@@ -110,7 +123,7 @@ export const services: Service[] = [
   {
     title: 'AI product engineering',
     description:
-      'Data models, software design documents and agent-driven workflows. On my latest product they cut delivery from three months to one.',
+      'Data models, software design documents and agent-driven workflows that take AI products from idea to launch.',
     tags: ['Agentic AI', 'RAG', 'FastAPI', 'Docker'],
   },
 ]
@@ -118,10 +131,53 @@ export const services: Service[] = [
 export const workSection = {
   label: 'Projects & research',
   title: 'Selected *work*',
-  blurb: 'Products and papers across healthcare, marketing, drones and cloud services.',
+}
+
+/** Badge text for research papers, keyed by `Project.status`. */
+export const paperStatus: Record<PaperStatus, string> = {
+  published: 'Published paper',
+  accepted: 'Accepted · in publication',
 }
 
 export const projects: Project[] = [
+  {
+    title: 'Conversion forecasting',
+    subtitle: 'Forecast Conversion in Digital Marketing Using Artificial Neural Network',
+    status: 'accepted',
+    kind: 'First author',
+    meta: 'INCIP 2026 · IEEE',
+    summary:
+      'A nine-layer neural network trained on 8,000 marketing records that beat Random Forest and Logistic Regression, with LIME surfacing the ten strongest conversion drivers.',
+    metric: { value: '0.92', label: 'F1-score · AUC 0.91' },
+    tools: ['Neural networks', 'LIME', 'Random Forest', 'Logistic Regression'],
+    image: '/work/conversion.svg',
+  },
+  {
+    title: 'Lung cancer prognosis',
+    subtitle: 'Improved Lung Cancer Prognosis via Hyperparameter Tuning on ML Classification Algorithms',
+    status: 'published',
+    kind: 'Co-author',
+    meta: 'CODE-AI 2024 · MIT Bengaluru',
+    summary:
+      'Compared more than 15 classifiers, tuned a Random Forest to the top result and explained its predictions with LIME and SHAP.',
+    metric: { value: '93.5%', label: 'Accuracy · 0.95 F1' },
+    tools: ['Random Forest', 'Hyperparameter tuning', 'LIME', 'SHAP'],
+    image: '/work/lung.svg',
+    href: 'https://doi.org/10.1201/9781003587392-35',
+  },
+  {
+    title: 'UAV flight mode detection',
+    subtitle: 'UAV Flight-Mode Classification Using CNN Transfer Learning',
+    status: 'published',
+    kind: 'First author',
+    meta: 'AIDE 2023',
+    summary:
+      'VGG16 transfer learning on DroneRF signals lifted flight-mode accuracy over prior work from 46.8% to 87.3%, with 100% UAV detection and 88.6% accuracy across four UAV types.',
+    metric: { value: '87.3%', label: 'Flight-mode accuracy' },
+    tools: ['VGG16', 'Transfer learning', 'CNN', 'DroneRF'],
+    image: '/work/uav.svg',
+    href: 'https://doi.org/10.1063/5.0262989',
+  },
   {
     title: 'GRACE',
     subtitle: 'Guided Response Assistant for Care and Empathy',
@@ -132,41 +188,6 @@ export const projects: Project[] = [
     metric: { value: '91%+', label: 'OCR accuracy' },
     tools: ['Angular', 'FastAPI', 'MongoDB Atlas', 'EasyOCR', 'Docker'],
     image: '/work/grace.svg',
-  },
-  {
-    title: 'Conversion forecasting',
-    subtitle: 'Forecast Conversion in Digital Marketing Using Artificial Neural Network',
-    kind: 'Research · First author',
-    meta: 'INCIP 2026 · Accepted',
-    summary:
-      'A nine-layer neural network trained on 8,000 marketing records that beat Random Forest and Logistic Regression, with LIME surfacing the ten strongest conversion drivers.',
-    metric: { value: '0.92', label: 'F1-score · AUC 0.91' },
-    tools: ['Neural networks', 'LIME', 'Random Forest', 'Logistic Regression'],
-    image: '/work/conversion.svg',
-  },
-  {
-    title: 'Lung cancer prognosis',
-    subtitle: 'Improved Lung Cancer Prognosis via Hyperparameter Tuning on ML Classification Algorithms',
-    kind: 'Research · Co-author',
-    meta: 'CODE-AI 2024 · MIT Bengaluru',
-    summary:
-      'Compared more than 15 classifiers, tuned a Random Forest to the top result and explained its predictions with LIME and SHAP.',
-    metric: { value: '93.5%', label: 'Accuracy · 0.95 F1' },
-    tools: ['Random Forest', 'Hyperparameter tuning', 'LIME', 'SHAP'],
-    image: '/work/lung.svg',
-    href: 'https://doi.org/10.1201/9781003587392-35',
-  },
-  {
-    title: 'UAV flight modes',
-    subtitle: 'UAV Flight-Mode Classification Using CNN Transfer Learning',
-    kind: 'Research · First author',
-    meta: 'AIDE 2023',
-    summary:
-      'VGG16 transfer learning on DroneRF signals lifted flight-mode accuracy over prior work from 46.8% to 87.3%, with 100% UAV detection and 88.6% accuracy across four UAV types.',
-    metric: { value: '87.3%', label: 'Flight-mode accuracy' },
-    tools: ['VGG16', 'Transfer learning', 'CNN', 'DroneRF'],
-    image: '/work/uav.svg',
-    href: 'https://doi.org/10.1063/5.0262989',
   },
   {
     title: 'Cloud storage selection',
@@ -182,9 +203,8 @@ export const projects: Project[] = [
 ]
 
 export const experienceSection = {
-  label: 'Experience',
+  label: 'Timeline',
   title: 'Experience & *education*',
-  blurb: 'From an AI and Data Science degree to analytics and AI products in production.',
 }
 
 /** Oldest first, so the timeline reads forward as you scroll. */
@@ -216,9 +236,8 @@ export const experience: Milestone[] = [
 ]
 
 export const stackSection = {
-  label: 'Toolbox',
+  label: 'Skills',
   title: 'Tools I *reach* for',
-  blurb: 'The languages, libraries and platforms behind the work above.',
 }
 
 /** Words that sweep across the screen as you scroll through the toolbox. */
@@ -272,7 +291,7 @@ export const certifications = [
 
 export const contact = {
   label: 'Contact',
-  title: "Let's turn data into *decisions*",
+  title: "Let's *talk*.",
   blurb: 'Questions about a project, a role or a research idea? My inbox is open.',
-  cta: 'Say hello',
+  cta: 'Email me',
 }

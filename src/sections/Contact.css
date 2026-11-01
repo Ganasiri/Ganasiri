@@ -122,7 +122,3 @@
   border-top: 1px solid var(--line);
   font-size: 0.85rem;
 }
-
-.footer__credit {
-  color: var(--muted);
-}
