@@ -17,7 +17,6 @@ export function Contact() {
       id="contact"
       ref={rootRef}
       className="contact"
-      data-theme="accent"
       tabIndex={-1}
       aria-labelledby="contact-title"
     >

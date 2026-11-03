@@ -55,7 +55,6 @@ export function Experience() {
       id="experience"
       ref={rootRef}
       className="experience section"
-      data-theme="light"
       tabIndex={-1}
       aria-labelledby="experience-title"
     >

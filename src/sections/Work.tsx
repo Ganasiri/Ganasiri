@@ -146,7 +146,6 @@ export function Work() {
       id="work"
       ref={sectionRef}
       className="work"
-      data-theme="dark"
       tabIndex={-1}
       aria-labelledby="work-title"
     >

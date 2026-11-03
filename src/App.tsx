@@ -4,7 +4,6 @@ import { Loader } from './components/Loader'
 import { Navbar } from './components/Navbar'
 import { ScrollProgress } from './components/ScrollProgress'
 import { SmoothScroll } from './components/SmoothScroll'
-import { useScrollThemes } from './hooks/useScrollThemes'
 import { ScrollTrigger } from './lib/gsap'
 import { About } from './sections/About'
 import { Contact } from './sections/Contact'
@@ -36,8 +35,6 @@ export default function App() {
   const [assetsReady, setAssetsReady] = useState(false)
   const [sceneReady, setSceneReady] = useState(false)
   const ready = assetsReady && sceneReady
-
-  useScrollThemes()
 
   // The intro is built around the top of the page, so always start there.
   useEffect(() => {

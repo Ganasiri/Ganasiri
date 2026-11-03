@@ -70,7 +70,6 @@ export function About() {
       id="about"
       ref={rootRef}
       className="about section"
-      data-theme="dark"
       tabIndex={-1}
       aria-labelledby="about-title"
     >

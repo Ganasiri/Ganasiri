@@ -46,7 +46,6 @@ export function Toolbox() {
       id="toolbox"
       ref={rootRef}
       className="toolbox section"
-      data-theme="dark"
       tabIndex={-1}
       aria-labelledby="toolbox-title"
     >
