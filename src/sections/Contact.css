@@ -20,6 +20,7 @@
 .contact__title em {
   font-size: 1.06em;
   letter-spacing: -0.03em;
+  color: var(--accent);
 }
 
 .contact__row {
@@ -41,8 +42,8 @@
   width: clamp(9rem, 15vw, 13rem);
   aspect-ratio: 1;
   border-radius: 50%;
-  background: var(--ink);
-  color: var(--orange);
+  background: var(--burgundy);
+  color: var(--butter);
   font-size: clamp(1.05rem, 1.5vw, 1.35rem);
   font-weight: 600;
   letter-spacing: -0.01em;
@@ -54,7 +55,7 @@
 }
 
 .contact__cta:hover {
-  background: #000;
+  background: var(--burgundy-deep);
 }
 
 .contact__details {

@@ -120,7 +120,6 @@ export function Hero({ play, onSceneReady }: Props) {
       id="home"
       ref={rootRef}
       className="hero"
-      data-theme="dark"
       tabIndex={-1}
       aria-labelledby="hero-title"
     >

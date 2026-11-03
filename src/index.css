@@ -1,47 +1,22 @@
 /* ------------------------------------------------------------------
-   Theme colours are registered so they can transition: each section
-   sets data-theme on <html> as it reaches the middle of the screen,
-   and the whole page fades to the new palette.
+   Butter background, navy for text and cards, and burgundy as the one
+   pop colour: italic headline words, numbers, indicators and the main
+   button. Burgundy is 6.6:1 on butter, so it works as text too.
    ------------------------------------------------------------------ */
-@property --bg {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: #0d0d0b;
-}
-@property --fg {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: #efebe3;
-}
-@property --muted {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: #8f8b82;
-}
-@property --line {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: rgb(239 235 227 / 0.14);
-}
-@property --accent {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: #ff5b24;
-}
-
 :root {
-  --ink: #0d0d0b;
-  --ink-soft: #1b1a17;
-  --paper: #efebe3;
-  --paper-deep: #dcd5c7;
-  --orange: #ff5b24;
-  --orange-deep: #c2370a;
+  --navy: #16324b;
+  --navy-deep: #0f263a;
+  --navy-raised: #1e3f5c;
+  --butter: #f3eddd;
+  --burgundy: #9b1d42;
+  --burgundy-deep: #7f1736;
 
-  --bg: var(--ink);
-  --fg: var(--paper);
-  --muted: #8f8b82;
-  --line: rgb(239 235 227 / 0.14);
-  --accent: var(--orange);
+  --bg: var(--butter);
+  --fg: var(--navy);
+  /* Secondary text, still 5.5:1 on butter. */
+  --muted: rgb(22 50 75 / 0.75);
+  --line: rgb(22 50 75 / 0.18);
+  --accent: var(--burgundy);
 
   --font-sans: 'Inter Tight Variable', 'Inter Tight', system-ui, sans-serif;
   --font-serif: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
@@ -54,32 +29,8 @@
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 
-  color-scheme: dark;
+  color-scheme: light;
   scrollbar-gutter: stable;
-  transition:
-    --bg 0.8s var(--ease-out),
-    --fg 0.8s var(--ease-out),
-    --muted 0.8s var(--ease-out),
-    --line 0.8s var(--ease-out),
-    --accent 0.8s var(--ease-out);
-}
-
-:root[data-theme='light'] {
-  --bg: var(--paper);
-  --fg: var(--ink);
-  --muted: #6b675f;
-  --line: rgb(13 13 11 / 0.14);
-  --accent: var(--orange-deep);
-  color-scheme: light;
-}
-
-:root[data-theme='accent'] {
-  --bg: var(--orange);
-  --fg: var(--ink);
-  --muted: rgb(13 13 11 / 0.8);
-  --line: rgb(13 13 11 / 0.22);
-  --accent: var(--ink);
-  color-scheme: light;
 }
 
 /* While the loader is on screen nothing should scroll. */
@@ -155,8 +106,8 @@ em {
 }
 
 ::selection {
-  background: var(--accent);
-  color: var(--bg);
+  background: var(--burgundy);
+  color: var(--butter);
 }
 
 :focus-visible {
@@ -204,6 +155,7 @@ section:focus {
 .section-title em {
   font-size: 1.08em;
   letter-spacing: -0.02em;
+  color: var(--accent);
 }
 
 /* Masks created by SplitText for line reveals; the padding keeps

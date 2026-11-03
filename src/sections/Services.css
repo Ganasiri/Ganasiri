@@ -24,23 +24,24 @@
   border-radius: var(--radius);
   overflow: hidden;
   transform-origin: 50% 0;
-  background: var(--ink);
-  color: var(--paper);
+  /* Navy cards with butter text; inside a card the accent flips too. */
+  --accent: var(--butter);
+  background: var(--navy);
+  color: var(--butter);
 }
 
-.service-card:nth-child(4n + 2) .service-card__inner {
-  background: var(--orange);
-  color: var(--ink);
+/* Cards alternate between two close shades of navy so each new card is
+   visible as it slides over the last. A burgundy rule marks the top edge. */
+.service-card:nth-child(even) .service-card__inner {
+  background: var(--navy-raised);
 }
 
-.service-card:nth-child(4n + 3) .service-card__inner {
-  background: var(--paper-deep);
-  color: var(--ink);
-}
-
-.service-card:nth-child(4n + 4) .service-card__inner {
-  background: var(--ink-soft);
-  color: var(--paper);
+.service-card__inner::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: var(--burgundy);
 }
 
 .service-card__top {
@@ -52,6 +53,7 @@
 
 .service-card__index {
   font-size: 0.85rem;
+  color: var(--accent);
 }
 
 .service-card__tags {
@@ -94,7 +96,7 @@
 .service-card__shade {
   position: absolute;
   inset: 0;
-  background: #000;
+  background: #081521;
   opacity: 0;
   pointer-events: none;
 }

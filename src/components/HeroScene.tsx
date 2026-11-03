@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react'
 import {
-  AdditiveBlending,
   BufferAttribute,
   BufferGeometry,
   Color,
+  NormalBlending,
   PerspectiveCamera,
   Points,
   Scene,
@@ -80,8 +80,10 @@ const vertexShader = /* glsl */ `
 `
 
 const fragmentShader = /* glsl */ `
-  uniform vec3 uAccent;
-  uniform vec3 uLight;
+  uniform vec3 uLow;
+  uniform vec3 uMid;
+  uniform vec3 uHigh;
+  uniform vec3 uPop;
   varying float vHeat;
   varying float vAlpha;
   varying float vScan;
@@ -90,10 +92,12 @@ const fragmentShader = /* glsl */ `
     float d = length(gl_PointCoord - 0.5);
     if (d > 0.5) discard;
     float soft = smoothstep(0.5, 0.1, d);
-    // Low ground is dim, peaks glow in the accent colour, like a heatmap.
-    vec3 color = mix(uLight * 0.5, uAccent, vHeat);
-    color = mix(color, uLight, vScan * 0.45);
-    float alpha = soft * vAlpha * (0.3 + vHeat * 0.7 + vScan * 0.35);
+    // Ink on paper: pale navy valleys, deep navy peaks, like a heatmap.
+    vec3 color = mix(uLow, uMid, smoothstep(0.0, 0.6, vHeat));
+    color = mix(color, uHigh, smoothstep(0.6, 1.0, vHeat));
+    // The rolling band is burgundy, the page's pop colour.
+    color = mix(color, uPop, vScan * 0.9);
+    float alpha = soft * vAlpha * (0.3 + vHeat * 0.6 + vScan * 0.45);
     gl_FragColor = vec4(color, alpha);
     #include <colorspace_fragment>
   }
@@ -153,16 +157,19 @@ export default function HeroScene({ onReady, morphTrigger, fadeTrigger, reducedM
       uFlatten: { value: 0 },
       uSize: { value: small ? 34 : 30 },
       uPixelRatio: { value: pixelRatio },
-      uAccent: { value: new Color('#ff5b24') },
-      uLight: { value: new Color('#efebe3') },
+      uLow: { value: new Color('#9aa8b3') },
+      uMid: { value: new Color('#4a6a86') },
+      uHigh: { value: new Color('#16324b') },
+      uPop: { value: new Color('#9b1d42') },
     }
+    // Normal blending: on a light page, dots should darken rather than glow.
     const material = new ShaderMaterial({
       uniforms,
       vertexShader,
       fragmentShader,
       transparent: true,
       depthWrite: false,
-      blending: AdditiveBlending,
+      blending: NormalBlending,
     })
     scene.add(new Points(geometry, material))
 

@@ -83,7 +83,7 @@
   height: var(--frame-h);
   overflow: hidden;
   border-radius: var(--radius);
-  background: var(--ink-soft);
+  background: var(--navy-deep);
 }
 
 .work-card__image {
@@ -123,24 +123,26 @@
   border-radius: 50%;
 }
 
+/* Published: solid burgundy with butter text, so the papers stand out.
+   Accepted: outlined in butter with a hollow dot, since it isn't out yet. */
 .work-card__badge.is-published {
-  background: var(--orange);
-  color: var(--ink);
+  background: var(--burgundy);
+  color: var(--butter);
 }
 
 .work-card__badge.is-published .work-card__badge-dot {
-  background: var(--ink);
+  background: var(--butter);
 }
 
 .work-card__badge.is-accepted {
-  border: 1px solid var(--orange);
-  background: rgb(13 13 11 / 0.8);
-  color: var(--paper);
+  border: 1px solid var(--butter);
+  background: rgb(15 38 58 / 0.85);
+  color: var(--butter);
   backdrop-filter: blur(6px);
 }
 
 .work-card__badge.is-accepted .work-card__badge-dot {
-  border: 1.5px solid var(--orange);
+  border: 1.5px solid var(--butter);
 }
 
 .work-card__metric {
@@ -152,8 +154,8 @@
   align-items: baseline;
   gap: 0.9rem;
   padding: 3rem clamp(1rem, 2vw, 1.75rem) clamp(1rem, 2vw, 1.5rem);
-  background: linear-gradient(to top, rgb(13 13 11 / 0.85), transparent);
-  color: var(--paper);
+  background: linear-gradient(to top, rgb(15 38 58 / 0.92), transparent);
+  color: var(--butter);
 }
 
 .work-card__metric strong {
@@ -164,7 +166,7 @@
 }
 
 .work-card__metric .mono {
-  color: rgb(239 235 227 / 0.75);
+  color: rgb(243 237 221 / 0.8);
 }
 
 .work-card__info {

@@ -51,7 +51,7 @@ All text lives in [`src/content.ts`](src/content.ts), so you never need to touch
 | Toolbox | Rows of tool names slide in opposite directions |
 | Contact | Headline lines slide up; the button leans towards the cursor |
 
-The page colours fade between dark, light and orange as each section reaches the middle of the screen (`data-theme` on each section, colours in `src/index.css`).
+The palette is butter (#F3EDDD) for the background of every section, navy (#16324B) for text, cards and the 3D scene, and burgundy (#9B1D42) as the one pop colour for italic headline words, numbers, indicators and the main button. Colours are set at the top of `src/index.css`.
 
 Smooth scrolling uses [Lenis](https://github.com/darkroomengineering/lenis), and the animations use [GSAP](https://gsap.com) ScrollTrigger and SplitText. If a visitor's system asks for reduced motion, the scroll animations are switched off, the Work row becomes a normal sideways scroller and the 3D scene stays still.
 
@@ -63,7 +63,7 @@ src/
   App.tsx           page order, loader and scroll lock
   index.css         colours, fonts, shared styles
   lib/gsap.ts       GSAP plugin setup
-  hooks/            media queries, text fitting, line reveals, section themes
+  hooks/            media queries, text fitting, line reveals
   components/       loader, navbar, cursor, smooth scroll, 3D scene, small UI parts
   sections/         one component + stylesheet per section
 public/

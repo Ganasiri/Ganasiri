@@ -38,7 +38,6 @@ export function Services() {
       id="services"
       ref={rootRef}
       className="services section"
-      data-theme="light"
       tabIndex={-1}
       aria-labelledby="services-title"
     >

@@ -6,8 +6,8 @@
   flex-direction: column;
   justify-content: space-between;
   padding: calc(var(--pad) * 0.8) var(--pad);
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--butter);
+  color: var(--navy);
 }
 
 .loader__row {
@@ -44,13 +44,13 @@
   flex: 1;
   height: 2px;
   margin-bottom: clamp(0.6rem, 1.6vw, 1.4rem);
-  background: rgb(239 235 227 / 0.16);
+  background: var(--line);
 }
 
 .loader__bar-fill {
   display: block;
   height: 100%;
-  background: var(--orange);
+  background: var(--burgundy);
   transform: scaleX(0);
   transform-origin: 0 50%;
 }
